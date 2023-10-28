@@ -10,30 +10,42 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class GuestServiceImpl implements GuestService{
+public class GuestServiceImpl implements GuestService {
     @Override
     public Guest generateRandomGuest(LocalDate seasonStart, LocalDate seasonEnd) {
 
-        String Name = "Guest Name";
+        List<String> guestNames = List.of("Alice",
+                "Bob", "Charlie", "David", "Eva", "Frank", "Grace", "Henry",
+                "Isabella", "Jack", "Kate", "Liam", "Mia", "Noah",
+                "Olivia", "Paul", "Quinn", "Rachel", "Samuel", "Sophia",
+                "Thomas", "Ursula", "Victor", "Willow", "Xavier",
+                "Yvonne", "Zachary", "Abigail", "Benjamin", "Chloe");
+
         Random random = new Random();
+
+        String name = guestNames.get(random.nextInt(guestNames.size()));
+
         GuestType[] guestTypes = GuestType.values();
         GuestType guestType = guestTypes[random.nextInt(guestTypes.length)];
 
         LocalDate checkIn = seasonStart.plusDays(random.nextInt((int) ChronoUnit.DAYS.between(seasonStart, seasonEnd)));
         LocalDate checkOut = checkIn.plusDays(random.nextInt(7));
-        if(checkOut.isAfter(seasonEnd)){
+        if (checkOut.isAfter(seasonEnd)) {
             checkOut = seasonEnd;
+        }
+        if(checkIn == checkOut){
+            checkOut = checkOut.plusDays(1);
         }
 
 
-        return new Guest (Name, guestType, checkIn, checkOut);
+        return new Guest(name, guestType, checkIn, checkOut);
     }
 
     @Override
     public Set<Guest> getGuestsForDay(List<Guest> guests, LocalDate date) {
         Set<Guest> guestsForToday = new HashSet<>();
-        for(Guest guest : guests){
-            if(!date.isBefore(guest.checkIn()) && !date.isAfter(guest.checkOut())){
+        for (Guest guest : guests) {
+            if (!date.isBefore(guest.checkIn()) && !date.isAfter(guest.checkOut())) {
                 guestsForToday.add(guest);
             }
         }
