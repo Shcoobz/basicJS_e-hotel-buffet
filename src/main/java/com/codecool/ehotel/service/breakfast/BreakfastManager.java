@@ -1,16 +1,17 @@
 package com.codecool.ehotel.service.breakfast;
 
+import com.codecool.ehotel.model.Guest;
 import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.model.MealType;
 import com.codecool.ehotel.service.buffet.*;
+import com.codecool.ehotel.service.guest.GuestService;
+import com.codecool.ehotel.service.guest.GuestServiceImpl;
 import com.codecool.ehotel.ui.DisplayBreakfast;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BreakfastManager {
 
@@ -32,6 +33,21 @@ public class BreakfastManager {
     LocalTime cycleStartTime = LocalTime.of(6, 0);  // start at 6:00 AM
     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");  // to format the time to 6:00 AM
 
+    // Generate a list of random guests for the season
+    GuestService guestService = new GuestServiceImpl();
+    LocalDate seasonStart = LocalDate.now().withDayOfYear(1); // Start of the year
+    LocalDate seasonEnd = LocalDate.now().withDayOfYear(365); // End of the year
+    List<Guest> allGuests = new ArrayList<>();
+    int numberOfGuests = 100; // You can change this to the desired number of guests
+
+    for (int i = 0; i < numberOfGuests; i++) {
+      allGuests.add(guestService.generateRandomGuest(seasonStart, seasonEnd));
+    }
+
+    // Retrieve the guests for the current day
+    LocalDate today = LocalDate.now();
+    Set<Guest> guestsToday = guestService.getGuestsForDay(allGuests, today);
+
     for (int cycle = 1; cycle <= 8; cycle++) {
       System.out.println("\nStarting cycle: " + cycle + " - " + cycleStartTime.format(timeFormatter) + "\n");
 
@@ -42,7 +58,7 @@ public class BreakfastManager {
       displayBreakfast.showBreakfastMenu(buffetManager);
 
       // consume
-      // TODO: Implement consume logic here
+      consumeMeal(guestsToday);
 
       // discard
       // TODO: Implement discard logic here
@@ -74,6 +90,20 @@ public class BreakfastManager {
 
     // refill the buffet using the refillMap
     buffetService.refillBuffet(buffetManager, refillMap);
+  }
+
+  public void consumeMeal(Set<Guest> guests) {
+    for (Guest guest : guests) {
+      List<MealType> preferences = guest.guestType().getMealPreferences();
+      for (MealType preference : preferences) {
+        boolean consumed = buffetManager.consumeFreshest(preference);
+        if (consumed) {
+          System.out.println(guest.name() + " consumed " + preference);
+        } else {
+          System.out.println(guest.name() + " wanted " + preference + ", but it was unavailable.");
+        }
+      }
+    }
   }
 
  /* private static void testingConsumeMeal(BuffetManager buffetManager) {
