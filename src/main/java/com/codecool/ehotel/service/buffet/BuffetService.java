@@ -1,5 +1,10 @@
 package com.codecool.ehotel.service.buffet;
 
-public interface BuffetService {
+import com.codecool.ehotel.model.MealType;
 
+import java.util.Map;
+
+public interface BuffetService {
+  BuffetManager createSampleBuffet();
+  void refillBuffet(BuffetManager buffetManager, Map<MealType, Integer> portionsToAdd);
 }
