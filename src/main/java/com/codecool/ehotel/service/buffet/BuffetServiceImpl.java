@@ -1,7 +1,11 @@
 package com.codecool.ehotel.service.buffet;
 
+import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.model.MealType;
 
+import java.time.LocalDateTime;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /* business logic class // controller
@@ -48,6 +52,35 @@ public class BuffetServiceImpl implements BuffetService {
   @Override
   public boolean consumeFreshest(BreakfastManager breakfastManager, MealType type) {
     return breakfastManager.consumeFreshest(type);
+  }
+
+  @Override
+  public int collectWaste(BreakfastManager breakfastManager, MealDurability durability, LocalDateTime time) {
+    int totalCost = 0;
+
+    // loop over all MealTypes
+    for (MealType type : MealType.values()) {
+
+      // check if durability matches provided durability
+      if (type.getDurability() == durability) {
+
+        // get all meals of this type
+        List<MealPortion> portions = breakfastManager.getAllMealsOfType(type);
+
+        // loop in reverse order to avoid shifting issues when removing
+        for (int i = portions.size() - 1; i >= 0; i--) {
+          MealPortion portion = portions.get(i);
+
+          // if portion's timestamp is before given time, discard it
+          if (portion.getTimestamp().isBefore(time)) {
+            totalCost += type.getCost();
+            portions.remove(i);
+          }
+        }
+      }
+    }
+
+    return totalCost;
   }
 
 }

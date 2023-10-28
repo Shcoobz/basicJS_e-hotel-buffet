@@ -61,4 +61,9 @@ public class BreakfastManager {
     }
     return false;
   }
+
+  public List<MealPortion> getAllMealsOfType(MealType type) {
+    return meals.getOrDefault(type, new ArrayList<>());
+  }
+
 }

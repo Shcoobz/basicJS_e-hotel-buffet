@@ -1,6 +1,7 @@
 package com.codecool.ehotel;
 
 import com.codecool.ehotel.model.Guest;
+import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.service.guest.GuestService;
 import com.codecool.ehotel.service.guest.GuestServiceImpl;
 
@@ -35,9 +36,21 @@ public class EHotelBuffetApplication {
     List<Guest> guests = generateGuestsForSeason(guestService, seasonStart, seasonEnd);
 
     // run breakfast
-    setupInitialBuffet();
-    // testing(buffetManager);
-    // displayUpdatedBuffet(buffetManager);
+    BreakfastManager breakfastManager = setupInitialBuffet();
+
+    // testing
+    testingConsumeMeal(breakfastManager);
+    testingRefillBuffet(breakfastManager);
+    displayUpdatedBuffet(breakfastManager);
+
+    // Simulating older meals for testing purposes
+    simulateOldMeals(breakfastManager);
+
+    // Simulating waste collection
+    simulateWasteCollection(breakfastManager);
+
+    displayUpdatedBuffet(breakfastManager);
+
 
     while (!currentDate.isAfter(seasonEnd)) {
       Set<Guest> guestsForToday = guestService.getGuestsForDay(guests, currentDate);
@@ -55,15 +68,29 @@ public class EHotelBuffetApplication {
     return breakfastManager;
   }
 
-  private static void testing(BreakfastManager breakfastManager) {
-    // Consume something once
+  private static void testingConsumeMeal(BreakfastManager breakfastManager) {
     buffetService.consumeFreshest(breakfastManager, MealType.SCRAMBLED_EGGS);
     System.out.println("\nBuffet after consumption:");
     display.showBreakfastMenu(breakfastManager);
+  }
 
-    // Refill the buffet using the specification
+  private static void testingRefillBuffet(BreakfastManager breakfastManager) {
     Map<MealType, Integer> refillSpec = BreakfastRefillSpecification.getSampleRefillSpecification();
     buffetService.refillBuffet(breakfastManager, refillSpec);
+  }
+
+  private static void simulateOldMeals(BreakfastManager breakfastManager) {
+    List<MealPortion> allMeals = breakfastManager.getAllMeals();
+
+    for (int i = 0; i < allMeals.size() / 2; i++) { // make half of the meals a day older
+      allMeals.get(i).setTimestamp(allMeals.get(i).getTimestamp().minusDays(1));
+    }
+  }
+
+  private static void simulateWasteCollection(BreakfastManager breakfastManager) {
+    // Simulating scenario to remove all SHORT durability meals that were added before today's date
+    int wastedCost = buffetService.collectWaste(breakfastManager, MealDurability.SHORT, LocalDate.now().atStartOfDay());
+    System.out.println("\nCost of wasted meals: $" + wastedCost);
   }
 
   private static void displayUpdatedBuffet(BreakfastManager breakfastManager) {
