@@ -5,6 +5,7 @@ import com.codecool.ehotel.model.MealType;
 import java.util.Map;
 
 public interface BuffetService {
-  BuffetManager createSampleBuffet();
-  void refillBuffet(BuffetManager buffetManager, Map<MealType, Integer> portionsToAdd);
+  BreakfastManager createSampleBuffet();
+  void refillBuffet(BreakfastManager breakfastManager, Map<MealType, Integer> portionsToAdd);
+  boolean consumeFreshest(BreakfastManager breakfastManager, MealType type);
 }

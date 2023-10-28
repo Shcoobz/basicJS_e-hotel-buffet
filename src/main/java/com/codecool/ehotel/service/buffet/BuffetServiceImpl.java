@@ -17,8 +17,8 @@ import java.util.Map;
 public class BuffetServiceImpl implements BuffetService {
 
   @Override
-  public BuffetManager createSampleBuffet() {
-    BuffetManager buffetManager = new BuffetManager();
+  public BreakfastManager createSampleBuffet() {
+    BreakfastManager breakfastManager = new BreakfastManager();
 
 /*    // testing
     buffetManager.addMealPortion(new MealPortion(MealType.SCRAMBLED_EGGS));
@@ -27,22 +27,28 @@ public class BuffetServiceImpl implements BuffetService {
 
     // generate each meal once
     for (MealType type : MealType.values()) {
-      buffetManager.addMealPortion(new MealPortion(type));
+      breakfastManager.addMealPortion(new MealPortion(type));
     }
 
-    return buffetManager;
+    return breakfastManager;
   }
 
   @Override
-  public void refillBuffet(BuffetManager buffetManager, Map<MealType, Integer> portionsToAdd) {
+  public void refillBuffet(BreakfastManager breakfastManager, Map<MealType, Integer> portionsToAdd) {
     for (Map.Entry<MealType, Integer> entry : portionsToAdd.entrySet()) {
       MealType type = entry.getKey();
       int count = entry.getValue();
 
       for (int i = 0; i < count; i++) {
-        buffetManager.addMealPortion(new MealPortion(type));
+        breakfastManager.addMealPortion(new MealPortion(type));
       }
     }
   }
+
+  @Override
+  public boolean consumeFreshest(BreakfastManager breakfastManager, MealType type) {
+    return breakfastManager.consumeFreshest(type);
+  }
+
 }
 

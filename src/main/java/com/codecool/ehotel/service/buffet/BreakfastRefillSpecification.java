@@ -5,7 +5,7 @@ import com.codecool.ehotel.model.MealType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BuffetRefillSpecification {
+public class BreakfastRefillSpecification {
 
   // testing
   public static Map<MealType, Integer> getSampleRefillSpecification() {

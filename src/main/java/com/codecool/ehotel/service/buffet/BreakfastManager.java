@@ -11,12 +11,13 @@ import java.util.*;
  * adding a meal portion, getting the freshest meal
  */
 
-public class BuffetManager {
+public class BreakfastManager {
 
   private Map<MealType, List<MealPortion>> meals;
 
-  public BuffetManager() {
+  public BreakfastManager() {
     this.meals = new HashMap<>();
+
     for (MealType type : MealType.values()) {
       this.meals.put(type, new ArrayList<>());
     }
@@ -50,5 +51,14 @@ public class BuffetManager {
       return mealPortions.get(0); // get first element of list
     }
     return null;  // TODO: add msg
+  }
+
+  public boolean consumeFreshest(MealType type) {
+    List<MealPortion> mealPortions = meals.get(type);
+    if (mealPortions != null && !mealPortions.isEmpty()) {
+      MealPortion freshestPortion = getFreshestPortion(type);
+      return mealPortions.remove(freshestPortion);
+    }
+    return false;
   }
 }
