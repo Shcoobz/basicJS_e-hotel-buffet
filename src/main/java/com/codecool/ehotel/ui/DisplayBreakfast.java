@@ -1,7 +1,6 @@
 package com.codecool.ehotel.ui;
 
-import com.codecool.ehotel.model.MealType;
-import com.codecool.ehotel.service.buffet.BuffetManager;
+import com.codecool.ehotel.service.buffet.BreakfastManager;
 import com.codecool.ehotel.service.buffet.MealPortion;
 
 import java.time.temporal.ChronoUnit;
@@ -9,8 +8,8 @@ import java.util.List;
 
 public class DisplayBreakfast {
 
-  public void showBreakfastMenu(BuffetManager buffetManager) {
-    List<MealPortion> allMeals = buffetManager.getAllMeals();
+  public void showBreakfastMenu(BreakfastManager breakfastManager) {
+    List<MealPortion> allMeals = breakfastManager.getAllMeals();
 
     System.out.println("\nPrepared meals for Breakfast buffet:");
     System.out.println("------------------------------------------------------------------");
@@ -25,10 +24,10 @@ public class DisplayBreakfast {
     }
     System.out.println("------------------------------------------------------------------");
 
-    MealPortion freshestScrambledEggs = buffetManager.getFreshestPortion(MealType.SCRAMBLED_EGGS);
+    /*MealPortion freshestScrambledEggs = buffetManager.getFreshestPortion(MealType.SCRAMBLED_EGGS);
     System.out.println("\nFreshest scrambled eggs prepared at: " + freshestScrambledEggs.getTimestamp());
 
     MealPortion leastFreshCroissant = buffetManager.getLeastFreshPortion(MealType.CROISSANT);
-    System.out.println("Oldest croissant prepared at: " + leastFreshCroissant.getTimestamp());
+    System.out.println("Oldest croissant prepared at: " + leastFreshCroissant.getTimestamp());*/
   }
 }
