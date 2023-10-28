@@ -1,22 +1,26 @@
 package com.codecool.ehotel.ui;
 
-import com.codecool.ehotel.service.buffet.BreakfastManager;
-import com.codecool.ehotel.service.buffet.MealPortion;
+import com.codecool.ehotel.service.buffet.BuffetManager;
+import com.codecool.ehotel.service.buffet.BuffetMealPortion;
 
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class DisplayBreakfast {
 
-  public void showBreakfastMenu(BreakfastManager breakfastManager) {
-    List<MealPortion> allMeals = breakfastManager.getAllMeals();
+  public void initialGreeting() {
+    System.out.println("\n*** Initial setup ***");
+    System.out.println("\nGood Morning, beloved guests! \nEnjoy your breakfast menu:");
+  }
 
-    System.out.println("\nPrepared meals for Breakfast buffet:");
+  public void showBreakfastMenu(BuffetManager buffetManager) {
+    List<BuffetMealPortion> allMeals = buffetManager.getAllMeals();
+
     System.out.println("------------------------------------------------------------------");
     System.out.format("| %-20s | %-20s | %-16s |\n", "Meal", "Date", "Time");
     System.out.println("------------------------------------------------------------------");
 
-    for (MealPortion meal : allMeals) {
+    for (BuffetMealPortion meal : allMeals) {
       System.out.format("| %-20s | %-20s | %-16s |\n",
           meal.getType(),
           meal.getTimestamp().toLocalDate(),

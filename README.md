@@ -1,1 +1,1 @@
-# ehotel-breakfastManager
+# ehotel-buffetManager

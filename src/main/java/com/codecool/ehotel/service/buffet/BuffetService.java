@@ -7,12 +7,12 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 public interface BuffetService {
-  BreakfastManager createSampleBuffet();
+  BuffetManager createInitialBuffet();
 
-  void refillBuffet(BreakfastManager breakfastManager, Map<MealType, Integer> portionsToAdd);
+  void refillBuffet(BuffetManager buffetManager, Map<MealType, Integer> portionsToAdd);
 
-  boolean consumeFreshest(BreakfastManager breakfastManager, MealType type);
+  boolean consumeFreshest(BuffetManager buffetManager, MealType type);
 
-  int collectWaste(BreakfastManager breakfastManager, MealDurability durability, LocalDateTime time);
+  int collectWaste(BuffetManager buffetManager, MealDurability durability, LocalDateTime time);
 
 }

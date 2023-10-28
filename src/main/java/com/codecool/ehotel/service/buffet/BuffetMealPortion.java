@@ -4,11 +4,11 @@ import com.codecool.ehotel.model.MealType;
 
 import java.time.LocalDateTime;
 
-public class MealPortion {
+public class BuffetMealPortion {
   private MealType type;
   private LocalDateTime timestamp;
 
-  public MealPortion(MealType type) {
+  public BuffetMealPortion(MealType type) {
     this.type = type;
     this.timestamp = LocalDateTime.now();
   }
