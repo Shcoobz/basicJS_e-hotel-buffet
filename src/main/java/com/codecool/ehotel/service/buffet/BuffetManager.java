@@ -1,9 +1,15 @@
 package com.codecool.ehotel.service.buffet;
 
-import com.codecool.ehotel.model.Buffet;
 import com.codecool.ehotel.model.MealType;
 
 import java.util.*;
+
+/* data manager class // model
+ *
+ * keeps track of the meals, their types, quantities
+ * provides methods to interact with this data
+ * adding a meal portion, getting the freshest meal
+ */
 
 public class BuffetManager {
 
@@ -28,10 +34,6 @@ public class BuffetManager {
       allMeals.addAll(queue);
     }
     return allMeals;
-  }
-
-  public Buffet getBuffetSnapshot() {
-    return new Buffet(new HashMap<>(meals));  // create a copy to ensure immutability
   }
 
   public MealPortion getFreshestPortion(MealType type) {
