@@ -10,10 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-// TODO: make names pretty
-// TODO: formatting of buffet list (names in center, dates & times right)
-// TODO: desing consumed/unavailable better
-// TODO: move souts to display
+// TODO: buffet menu
+//  - format list (names in center, dates & times right)
+//  - add count to print out?
+//  - make print out wider?
+//  - add titles to cycle steps? refill / consume / discard
+//  - add menu print out after each step?
+
+// TODO: general
+//  - make names pretty (Scrambled eggs instead of SCRAMBLED_EGGS)
+//  - move all souts to display
 
 public class EHotelBuffetApplication {
 
@@ -22,7 +28,7 @@ public class EHotelBuffetApplication {
     // Initialize services
     GuestService guestService = new GuestServiceImpl();
 
-    // Define the "season" date limits
+   /* // Define the "season" date limits
     LocalDate seasonStart = LocalDate.of(2023, 11, 1);
     LocalDate seasonEnd = LocalDate.of(2024, 11, 5);
     LocalDate currentDate = seasonStart;
@@ -34,7 +40,7 @@ public class EHotelBuffetApplication {
       Set<Guest> guestsForToday = guestService.getGuestsForDay(guests, currentDate);
       currentDate = currentDate.plusDays(1);
     }
-    System.out.println(guests);
+    System.out.println(guests);*/
 
     // run breakfast
     BreakfastManager breakfastManager = new BreakfastManager();
