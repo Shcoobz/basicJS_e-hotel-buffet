@@ -83,7 +83,7 @@ public class BreakfastManager {
     return allGuests;
   }
 
-  private void guestConsumesPreferredMeal(Guest guest, BuffetManager buffet) {
+/*  private void guestConsumesPreferredMeal(Guest guest, BuffetManager buffet) {
     GuestType guestType = guest.guestType();
     List<MealType> preferredMeals = guestType.getMealPreferences();
 
@@ -96,12 +96,93 @@ public class BreakfastManager {
         System.out.println(guest.name() + " wanted " + meal + ", but it was unavailable.");
       }
     }
+  }*/
+
+/*  private void guestConsumesPreferredMeal(Guest guest, BuffetManager buffet) {
+    GuestType guestType = guest.guestType();
+    List<MealType> preferredMeals = guestType.getMealPreferences();
+
+    List<String> consumedNames = new ArrayList<>();
+    List<String> consumedMeals = new ArrayList<>();
+    List<String> notConsumedNames = new ArrayList<>();
+    List<String> notConsumedMeals = new ArrayList<>();
+
+    for (MealType meal : preferredMeals) {
+      if (buffet.getCountOfMealType(meal) > 0) {
+        buffet.consumeFreshest(meal);
+        consumedNames.add(guest.name());
+        consumedMeals.add(meal.toString());
+        break;
+      } else {
+        notConsumedNames.add(guest.name());
+        notConsumedMeals.add(meal.toString());
+      }
+    }
+
+    printMealsInTableFormat(consumedNames, consumedMeals, notConsumedNames, notConsumedMeals);
+  }*/
+
+
+
+  private void guestConsumesPreferredMeal(Guest guest, BuffetManager buffet, List<String> consumedNames, List<String> consumedMeals, List<String> notConsumedNames, List<String> notConsumedMeals) {
+    GuestType guestType = guest.guestType();
+    List<MealType> preferredMeals = guestType.getMealPreferences();
+
+    for (MealType meal : preferredMeals) {
+      if (buffet.getCountOfMealType(meal) > 0) {
+        buffet.consumeFreshest(meal);
+        consumedNames.add(guest.name());
+        consumedMeals.add(meal.toString());
+        break;
+      } else {
+        notConsumedNames.add(guest.name());
+        notConsumedMeals.add(meal.toString());
+      }
+    }
   }
 
-  public void consumeMeal(Set<Guest> guests) {
+  private void printMealsInTableFormat(List<String> consumedNames, List<String> consumedMeals, List<String> notConsumedNames, List<String> notConsumedMeals) {
+    System.out.println("---------------------------------------------------------------------------------------------");
+    System.out.format("| %-43s | %-43s |\n", "Consumed", "Not Consumed");
+    System.out.println("---------------------------------------------------------------------------------------------");
+    System.out.format("| %-20s | %-20s | %-20s | %-20s |\n", "Name", "Meal", "Name", "Meal");
+    System.out.println("---------------------------------------------------------------------------------------------");
+
+    int maxRows = Math.max(consumedNames.size(), notConsumedNames.size());
+    for (int i = 0; i < maxRows; i++) {
+      String consumedName = (i < consumedNames.size()) ? consumedNames.get(i) : "";
+      String consumedMeal = (i < consumedMeals.size()) ? consumedMeals.get(i) : "";
+      String notConsumedName = (i < notConsumedNames.size()) ? notConsumedNames.get(i) : "";
+      String notConsumedMeal = (i < notConsumedMeals.size()) ? notConsumedMeals.get(i) : "";
+
+      System.out.format("| %-20s | %-20s | %-20s | %-20s |\n",
+          consumedName,
+          consumedMeal,
+          notConsumedName,
+          notConsumedMeal);
+    }
+    System.out.println("---------------------------------------------------------------------------------------------");
+  }
+
+
+
+/*  public void consumeMeal(Set<Guest> guests) {
     for (Guest guest : guests) {
       guestConsumesPreferredMeal(guest, buffetManager);
     }
+  }*/
+
+  public void consumeMeal(Set<Guest> guests) {
+    List<String> consumedNames = new ArrayList<>();
+    List<String> consumedMeals = new ArrayList<>();
+    List<String> notConsumedNames = new ArrayList<>();
+    List<String> notConsumedMeals = new ArrayList<>();
+
+    for (Guest guest : guests) {
+      guestConsumesPreferredMeal(guest, buffetManager, consumedNames, consumedMeals, notConsumedNames, notConsumedMeals);
+    }
+
+    printMealsInTableFormat(consumedNames, consumedMeals, notConsumedNames, notConsumedMeals);
   }
 
   private void serveBreakfast(Set<Guest> guestsToday) {
