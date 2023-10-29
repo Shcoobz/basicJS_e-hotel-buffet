@@ -42,7 +42,7 @@ public class BuffetManager {
     if (buffetMealPortions != null && !buffetMealPortions.isEmpty()) {
       return buffetMealPortions.get(buffetMealPortions.size() - 1); // get last element of list
     }
-    return null;  // TODO: add msg
+    return null;  // TODO: do something
   }
 
   public BuffetMealPortion getLeastFreshPortion(MealType type) {
@@ -50,7 +50,7 @@ public class BuffetManager {
     if (buffetMealPortions != null && !buffetMealPortions.isEmpty()) {
       return buffetMealPortions.get(0); // get first element of list
     }
-    return null;  // TODO: add msg
+    return null;  // TODO: do something
   }
 
   public boolean consumeFreshest(MealType type) {

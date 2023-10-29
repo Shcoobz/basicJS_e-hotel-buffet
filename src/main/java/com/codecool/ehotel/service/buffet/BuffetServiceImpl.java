@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class BuffetServiceImpl implements BuffetService {
 
-  @Override
+/*  @Override
   public BuffetManager createInitialBuffet() {
     BuffetManager buffetManager = new BuffetManager();
 
@@ -31,7 +31,7 @@ public class BuffetServiceImpl implements BuffetService {
     }
 
     return buffetManager;
-  }
+  }*/
 
   @Override
   public void refillBuffet(BuffetManager buffetManager, Map<MealType, Integer> portionsToAdd) {

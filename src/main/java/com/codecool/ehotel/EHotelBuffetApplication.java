@@ -12,6 +12,8 @@ import java.util.Set;
 
 // TODO: make names pretty
 // TODO: formatting of buffet list (names in center, dates & times right)
+// TODO: desing consumed/unavailable better
+// TODO: move souts to display
 
 public class EHotelBuffetApplication {
 

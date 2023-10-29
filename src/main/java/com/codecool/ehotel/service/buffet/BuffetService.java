@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 public interface BuffetService {
-  BuffetManager createInitialBuffet();
+  // BuffetManager createInitialBuffet();
 
   void refillBuffet(BuffetManager buffetManager, Map<MealType, Integer> portionsToAdd);
 
