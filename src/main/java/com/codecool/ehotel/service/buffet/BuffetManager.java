@@ -1,7 +1,9 @@
 package com.codecool.ehotel.service.buffet;
 
+import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.model.MealType;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 /* data manager class // model
@@ -14,9 +16,11 @@ import java.util.*;
 public class BuffetManager {
 
   private Map<MealType, List<BuffetMealPortion>> meals;
+  private int totalWasteCost;
 
   public BuffetManager() {
     this.meals = new HashMap<>();
+    this.totalWasteCost = 0;
 
     for (MealType type : MealType.values()) {
       this.meals.put(type, new ArrayList<>());
@@ -68,6 +72,64 @@ public class BuffetManager {
 
   public int getCountOfMealType(MealType type) {
     return (int) getAllMeals().stream().filter(meal -> meal.getType() == type).count();
+
   }
 
+  public int calculateWasteCost() {
+    Map<MealType, Integer> wastedCounts = new HashMap<>();
+
+    for (MealType type : MealType.values()) {
+      int wasteCount = 0;
+      List<BuffetMealPortion> mealPortions = meals.get(type);
+
+      for (BuffetMealPortion portion : mealPortions) {
+        if (isMealWasted(portion)) {
+          wasteCount++;
+        }
+      }
+
+      wastedCounts.put(type, wasteCount);
+    }
+
+    int totalCost = 0;
+    for (MealType type : wastedCounts.keySet()) {
+      int wasteCount = wastedCounts.get(type);
+      totalCost += wasteCount * type.getCost();
+    }
+
+    totalWasteCost += totalCost;
+
+    return totalCost;
+  }
+  private boolean isMealWasted(BuffetMealPortion portion) {
+    LocalDateTime now = LocalDateTime.now();
+    LocalDateTime mealTimestamp = portion.getTimestamp();
+    MealDurability durability = portion.getType().getDurability();
+
+    return switch (durability) {
+      case SHORT -> mealTimestamp.isBefore(now.minusHours(2));
+      case MEDIUM -> mealTimestamp.isBefore(now.minusHours(4));
+      case LONG -> mealTimestamp.isBefore(now.minusHours(6));
+      default -> false;
+    };
+  }
+
+  public Map<MealType, Integer> calculateWasteCounts() {
+    Map<MealType, Integer> wastedCounts = new HashMap<>();
+
+    for (MealType type : MealType.values()) {
+      int wasteCount = 0;
+      List<BuffetMealPortion> mealPortions = meals.get(type);
+
+      for (BuffetMealPortion portion : mealPortions) {
+        if (isMealWasted(portion)) {
+          wasteCount++;
+        }
+      }
+
+      wastedCounts.put(type, wasteCount);
+    }
+
+    return wastedCounts;
+  }
 }

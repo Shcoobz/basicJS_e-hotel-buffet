@@ -13,7 +13,11 @@ public class BuffetMealPortion {
     this.timestamp = LocalDateTime.now();
   }
 
-  public Object getType() {
+  /*public Object getType() {
+    return type;
+  }*/
+
+  public MealType getType() {
     return type;
   }
 
