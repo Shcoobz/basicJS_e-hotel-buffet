@@ -122,8 +122,6 @@ public class BreakfastManager {
     printMealsInTableFormat(consumedNames, consumedMeals, notConsumedNames, notConsumedMeals);
   }*/
 
-
-
   private void guestConsumesPreferredMeal(Guest guest, BuffetManager buffet, List<String> consumedNames, List<String> consumedMeals, List<String> notConsumedNames, List<String> notConsumedMeals) {
     GuestType guestType = guest.guestType();
     List<MealType> preferredMeals = guestType.getMealPreferences();
@@ -163,8 +161,6 @@ public class BreakfastManager {
     }
     System.out.println("---------------------------------------------------------------------------------------------");
   }
-
-
 
 /*  public void consumeMeal(Set<Guest> guests) {
     for (Guest guest : guests) {
