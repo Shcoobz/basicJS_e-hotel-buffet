@@ -64,46 +64,29 @@ public class DisplayBreakfast {
     System.out.println("---------------------------------------------------------------------------------------------");
   }
 
-  public void displayDiscardedMealsSideBySide(List<DiscardedMealsResult> discardedResults) {
-    System.out.println("-------------------------------------------------------------------------------------------------------------------------");
-    System.out.format("| %-20s | %-20s | %-16s | %-20s | %-20s | %-16s |\n",
-        "Discarded Meal SHORT", "Date", "Time",
-        "Discarded Meal MEDIUM", "Date", "Time");
-    System.out.println("-------------------------------------------------------------------------------------------------------------------------");
+  public void displayDiscardedMealsAndCost(MealDurability durability, DiscardedMealsResult discardedResult) {
+    System.out.println("------------------------------------------------------------------");
+    System.out.format("| %-20s | %-20s | %-16s |\n", "Discarded Meal" + durability, "Date", "Time");
+    System.out.println("------------------------------------------------------------------");
 
-    // Assuming 0 is SHORT and 1 is MEDIUM for simplicity
-    List<BuffetMealPortion> shortMeals = new ArrayList<>(discardedResults.get(0).getDiscardedMeals());
-    List<BuffetMealPortion> mediumMeals = new ArrayList<>(discardedResults.get(1).getDiscardedMeals());
+    // sorting discarded meals by timestamps
+    List<BuffetMealPortion> sortedMeals = new ArrayList<>(discardedResult.getDiscardedMeals());
+    sortedMeals.sort(Comparator.comparing(BuffetMealPortion::getTimestamp));
 
-    shortMeals.sort(Comparator.comparing(BuffetMealPortion::getTimestamp));
-    mediumMeals.sort(Comparator.comparing(BuffetMealPortion::getTimestamp));
-
-    int maxRows = Math.max(shortMeals.size(), mediumMeals.size());
-    for (int i = 0; i < maxRows; i++) {
-      String shortMealType = (i < shortMeals.size()) ? shortMeals.get(i).getType().toString() : "";
-      String shortMealDate = (i < shortMeals.size()) ? shortMeals.get(i).getTimestamp().toLocalDate().toString() : "";
-      String shortMealTime = (i < shortMeals.size()) ? shortMeals.get(i).getTimestamp().toLocalTime().truncatedTo(ChronoUnit.MINUTES).toString() : "";
-
-      String mediumMealType = (i < mediumMeals.size()) ? mediumMeals.get(i).getType().toString() : "";
-      String mediumMealDate = (i < mediumMeals.size()) ? mediumMeals.get(i).getTimestamp().toLocalDate().toString() : "";
-      String mediumMealTime = (i < mediumMeals.size()) ? mediumMeals.get(i).getTimestamp().toLocalTime().truncatedTo(ChronoUnit.MINUTES).toString() : "";
-
-      System.out.format("| %-20s | %-20s | %-16s | %-20s | %-20s | %-16s |\n",
-          shortMealType, shortMealDate, shortMealTime,
-          mediumMealType, mediumMealDate, mediumMealTime);
+    // iterating over sorted list to display
+    for (BuffetMealPortion mealPortion : sortedMeals) {
+      System.out.format("| %-20s | %-20s | %-16s |\n",
+          mealPortion.getType().toString(),
+          mealPortion.getTimestamp().toLocalDate(),
+          mealPortion.getTimestamp().toLocalTime().truncatedTo(ChronoUnit.MINUTES));  // displaying time without seconds
     }
-    System.out.println("-------------------------------------------------------------------------------------------------------------------------");
 
-    double totalShortCost = discardedResults.get(0).getTotalCost();
-    double totalMediumCost = discardedResults.get(1).getTotalCost();
-    double totalCost = totalShortCost + totalMediumCost;
-
-    System.out.println("Total Discarded Cost for SHORT durability meals: $" + totalShortCost);
-    System.out.println("Total Discarded Cost for MEDIUM durability meals: $" + totalMediumCost);
-    System.out.println("Total Discarded Cost for ALL meals: $" + totalCost);
-
-    System.out.println("-------------------------------------------------------------------------------------------------------------------------");
+    System.out.println("------------------------------------------------------------------");
+    System.out.println("Total Discarded Cost for " + durability + " durability meals: $" + discardedResult.getTotalCost());
+    System.out.println("------------------------------------------------------------------");
   }
+
+
 
   public void printNoMealsToDiscardMessage(MealDurability durability) {
     System.out.println("No meals of durability " + durability.toString() + " to discard!");
