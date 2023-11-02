@@ -20,6 +20,7 @@ import java.util.Map;
 
 public class BuffetServiceImpl implements BuffetService {
 
+
   @Override
   public void refillBuffet(BuffetManager buffetManager, Map<MealType, Integer> portionsToAdd, LocalDateTime currentSimulatedTime) {
     for (Map.Entry<MealType, Integer> entry : portionsToAdd.entrySet()) {
