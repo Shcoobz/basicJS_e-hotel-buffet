@@ -46,6 +46,7 @@ public class BreakfastManager {
       Set<Guest> guestsToday = getGuestsForToday(numberOfGuests);
       serveBreakfast(guestsToday, cycle);
       currentSimulatedTime = currentSimulatedTime.plusMinutes(30);
+
     }
 
     System.out.println("Total Unhappy Guests: " + totalUnhappyGuests);
@@ -106,14 +107,8 @@ public class BreakfastManager {
         notConsumedNames.add(guest.name());
         notConsumedMeals.add(meal.toString());
         mealName = meal.toString();
+        totalUnhappyGuests++;
       } ;
-    }
-    if (!satisfied) {
-      notConsumedNames.add(guest.name());
-      notConsumedMeals.add("No preferred meal available");
-      totalUnhappyGuests++;
-
-
     }
   }
 
@@ -127,13 +122,13 @@ public class BreakfastManager {
       GuestType guestType = guest.guestType();
       List<MealType> preferredMeals = guestType.getMealPreferences();
       boolean satisfied = false;
-      //guestConsumesPreferredMeal(guest, buffetManager, consumedNames, consumedMeals, notConsumedNames, notConsumedMeals);
+      guestConsumesPreferredMeal(guest, buffetManager, consumedNames, consumedMeals, notConsumedNames, notConsumedMeals);
 
-      for (MealType meal : preferredMeals) {
+      /*for (MealType meal : preferredMeals) {
         if (buffetManager.getCountOfMealType(meal) > 0) {
 
         }
-      }
+      }*/
     }
 
     displayBreakfast.printMealsInTableFormat(consumedNames, consumedMeals, notConsumedNames, notConsumedMeals);
