@@ -1,5 +1,6 @@
 package com.codecool.ehotel.service.buffet;
 
+import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.model.MealType;
 
 import java.util.*;
@@ -69,5 +70,8 @@ public class BuffetManager {
   public int getCountOfMealType(MealType type) {
     return (int) getAllMeals().stream().filter(meal -> meal.getType() == type).count();
   }
+
+
+
 
 }

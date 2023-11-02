@@ -1,17 +1,13 @@
 
-Â
-java:S1192‘"Define a constant instead of duplicating this literal "---------------------------------------------------------------------------------------------" 4 times.(ôÙÊÔşÿÿÿÿ8°İúÒ·1
 A
-java:S1640:"Convert this Map to an EnumMap.(Î¸„ÿÿÿÿÿ8µÒÑµ·1
-]	java:S125V"<This block of commented-out lines of code should be removed.(¥ÇÎ›úÿÿÿÿ8ñÍ¼Ò·1
-]	java:S125e"<This block of commented-out lines of code should be removed.(¥ÇÎ›úÿÿÿÿ8­æŞÒ·1
-o
-java:S3457’"Q%n should be used in place of \n to produce the platform-specific line separator.(Ÿ¢íù8¥¨òÒ·1
-t
-java:S3457”"Q%n should be used in place of \n to produce the platform-specific line separator.(¾¡—ııÿÿÿÿ8°àìÒ·1
-t
-java:S3457"Q%n should be used in place of \n to produce the platform-specific line separator.(ë¥ïßúÿÿÿÿ8´àìÒ·1
-^	java:S125©"<This block of commented-out lines of code should be removed.(èÔÀ¯øÿÿÿÿ8óØÛÒ·1
-P
-java:S1135Â"2Complete the task associated to this TODO comment.(†š×Ü8ä«ÍÒ·1
-Y	java:S125Å"<This block of commented-out lines of code should be removed.(øÃŠá8æ«ÍÒ·1
+java:S16408"Convert this Map to an EnumMap.(Î¸„ÿÿÿÿÿ8›çú¹¸1
+e
+java:S1854’"GRemove this useless assignment to local variable "mediumDiscardResult".(À ‡Ä8Éé©º¸1
+i
+java:S1854"FRemove this useless assignment to local variable "shortDiscardResult".(½ÄŸïùÿÿÿÿ8Éé©º¸1
+Z
+java:S1481"7Remove this unused "shortDiscardResult" local variable.(½ÄŸïùÿÿÿÿ8Éé©º¸1
+X	java:S125"<This block of commented-out lines of code should be removed.(ÂÛ·8Éé©º¸1
+V
+java:S1481’"8Remove this unused "mediumDiscardResult" local variable.(À ‡Ä8Êé©º¸1
+Y	java:S125“"<This block of commented-out lines of code should be removed.(µ«§8Êé©º¸1

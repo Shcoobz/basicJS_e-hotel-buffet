@@ -33,3 +33,5 @@ u
 Esrc/main/java/com/codecool/ehotel/service/guest/GuestServiceImpl.java,c/5/c5eed193543b8b648fd82c1ba052f5c43e554ce4
 y
 Isrc/main/java/com/codecool/ehotel/service/breakfast/BreakfastManager.java,5/b/5b9a6faedacebf7e85586730e12bfa0e56042944
+z
+Jsrc/main/java/com/codecool/ehotel/service/buffet/DiscardedMealsResult.java,8/8/883dc46b6bfc72458a1ff93e1e02d1b3401e6a1d

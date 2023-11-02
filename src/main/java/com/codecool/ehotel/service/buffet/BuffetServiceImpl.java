@@ -4,6 +4,7 @@ import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.model.MealType;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,28 +20,14 @@ import java.util.Map;
 
 public class BuffetServiceImpl implements BuffetService {
 
-/*  @Override
-  public BuffetManager createInitialBuffet() {
-    BuffetManager buffetManager = new BuffetManager();
-
-    // setup first breakfast buffet: generates 3 meals of each meal type
-    for (MealType type : MealType.values()) {
-      for (int i = 0; i < 3; i++) {
-        buffetManager.addMealPortion(new BuffetMealPortion(type));
-      }
-    }
-
-    return buffetManager;
-  }*/
-
   @Override
-  public void refillBuffet(BuffetManager buffetManager, Map<MealType, Integer> portionsToAdd) {
+  public void refillBuffet(BuffetManager buffetManager, Map<MealType, Integer> portionsToAdd, LocalDateTime currentSimulatedTime) {
     for (Map.Entry<MealType, Integer> entry : portionsToAdd.entrySet()) {
       MealType type = entry.getKey();
       int count = entry.getValue();
 
       for (int i = 0; i < count; i++) {
-        buffetManager.addMealPortion(new BuffetMealPortion(type));
+        buffetManager.addMealPortion(new BuffetMealPortion(type, currentSimulatedTime));
       }
     }
   }
@@ -51,33 +38,36 @@ public class BuffetServiceImpl implements BuffetService {
   }
 
   @Override
-  public int collectWaste(BuffetManager buffetManager, MealDurability durability, LocalDateTime time) {
+  public DiscardedMealsResult collectWaste(BuffetManager buffetManager, MealDurability durability, LocalDateTime currentTime) {
+    List<BuffetMealPortion> discardedMeals = new ArrayList<>();
     int totalCost = 0;
 
-    // loop over all MealTypes
     for (MealType type : MealType.values()) {
 
       // check if durability matches provided durability
       if (type.getDurability() == durability) {
 
-        // get all meals of this type
+        // get all meals of type
         List<BuffetMealPortion> portions = buffetManager.getAllMealsOfType(type);
 
         // loop in reverse order to avoid shifting issues when removing
         for (int i = portions.size() - 1; i >= 0; i--) {
           BuffetMealPortion portion = portions.get(i);
 
-          // if portion's timestamp is before given time, discard it
-          if (portion.getTimestamp().isBefore(time)) {
+          // if portion's timestamp plus durability duration is before the current time, discard it
+          LocalDateTime discardTime = portion.getTimestamp().plusMinutes(type.getDurability().getDurationInMinutes());
+          if (discardTime.isBefore(currentTime)) {
             totalCost += type.getCost();
+            discardedMeals.add(portion);
             portions.remove(i);
           }
         }
       }
     }
 
-    return totalCost;
+    return new DiscardedMealsResult(discardedMeals, totalCost);
   }
+
 
 }
 

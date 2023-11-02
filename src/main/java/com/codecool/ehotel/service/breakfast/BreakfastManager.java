@@ -2,6 +2,7 @@ package com.codecool.ehotel.service.breakfast;
 
 import com.codecool.ehotel.model.Guest;
 import com.codecool.ehotel.model.GuestType;
+import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.model.MealType;
 import com.codecool.ehotel.service.buffet.*;
 import com.codecool.ehotel.service.guest.GuestService;
@@ -9,16 +10,15 @@ import com.codecool.ehotel.service.guest.GuestServiceImpl;
 import com.codecool.ehotel.ui.DisplayBreakfast;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class BreakfastManager {
-
   private BuffetService buffetService;
   private BuffetManager buffetManager;
-
   private DisplayBreakfast displayBreakfast;
+  private LocalDateTime currentSimulatedTime;
 
   public BreakfastManager() {
     this.buffetService = new BuffetServiceImpl();
@@ -30,20 +30,16 @@ public class BreakfastManager {
 
     displayBreakfast.initialGreeting();
 
-    LocalTime cycleStartTime = LocalTime.of(6, 0);  // start at 6:00 AM
-    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");  // to format the time to 6:00 AM
+    currentSimulatedTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(6, 0));
+
     int numberOfGuests = 1000;
 
-    for (int cycle = 1; cycle <= 8; cycle++) {
-      System.out.println("\nStarting cycle: " + cycle + " - " + cycleStartTime.format(timeFormatter) + "\n");
-
+    for (int cycle = 1; cycle <= 9; cycle++) {
+      displayBreakfast.printCycleStart(cycle, currentSimulatedTime);
       Set<Guest> guestsToday = getGuestsForToday(numberOfGuests);
-
-      serveBreakfast(guestsToday);
-
-      cycleStartTime = cycleStartTime.plusMinutes(30);  // move to the next half hour for the next cycle
+      serveBreakfast(guestsToday, cycle);
+      currentSimulatedTime = currentSimulatedTime.plusMinutes(30);
     }
-
   }
 
   private Set<Guest> getGuestsForToday(int numberOfGuests) {
@@ -68,7 +64,7 @@ public class BreakfastManager {
     }
 
     // refill the buffet using the refillMap
-    buffetService.refillBuffet(buffetManager, refillMap);
+    buffetService.refillBuffet(buffetManager, refillMap, currentSimulatedTime);
   }
 
   private List<Guest> generateGuestsForSeason(int numberOfGuests) {
@@ -82,45 +78,6 @@ public class BreakfastManager {
     }
     return allGuests;
   }
-
-/*  private void guestConsumesPreferredMeal(Guest guest, BuffetManager buffet) {
-    GuestType guestType = guest.guestType();
-    List<MealType> preferredMeals = guestType.getMealPreferences();
-
-    for (MealType meal : preferredMeals) {
-      if (buffet.getCountOfMealType(meal) > 0) {
-        buffet.consumeFreshest(meal);
-        System.out.println(guest.name() + " consumed " + meal);
-        break;
-      } else {
-        System.out.println(guest.name() + " wanted " + meal + ", but it was unavailable.");
-      }
-    }
-  }*/
-
-/*  private void guestConsumesPreferredMeal(Guest guest, BuffetManager buffet) {
-    GuestType guestType = guest.guestType();
-    List<MealType> preferredMeals = guestType.getMealPreferences();
-
-    List<String> consumedNames = new ArrayList<>();
-    List<String> consumedMeals = new ArrayList<>();
-    List<String> notConsumedNames = new ArrayList<>();
-    List<String> notConsumedMeals = new ArrayList<>();
-
-    for (MealType meal : preferredMeals) {
-      if (buffet.getCountOfMealType(meal) > 0) {
-        buffet.consumeFreshest(meal);
-        consumedNames.add(guest.name());
-        consumedMeals.add(meal.toString());
-        break;
-      } else {
-        notConsumedNames.add(guest.name());
-        notConsumedMeals.add(meal.toString());
-      }
-    }
-
-    printMealsInTableFormat(consumedNames, consumedMeals, notConsumedNames, notConsumedMeals);
-  }*/
 
   private void guestConsumesPreferredMeal(Guest guest, BuffetManager buffet, List<String> consumedNames, List<String> consumedMeals, List<String> notConsumedNames, List<String> notConsumedMeals) {
     GuestType guestType = guest.guestType();
@@ -139,35 +96,6 @@ public class BreakfastManager {
     }
   }
 
-  private void printMealsInTableFormat(List<String> consumedNames, List<String> consumedMeals, List<String> notConsumedNames, List<String> notConsumedMeals) {
-    System.out.println("---------------------------------------------------------------------------------------------");
-    System.out.format("| %-43s | %-43s |\n", "Consumed", "Not Consumed");
-    System.out.println("---------------------------------------------------------------------------------------------");
-    System.out.format("| %-20s | %-20s | %-20s | %-20s |\n", "Name", "Meal", "Name", "Meal");
-    System.out.println("---------------------------------------------------------------------------------------------");
-
-    int maxRows = Math.max(consumedNames.size(), notConsumedNames.size());
-    for (int i = 0; i < maxRows; i++) {
-      String consumedName = (i < consumedNames.size()) ? consumedNames.get(i) : "";
-      String consumedMeal = (i < consumedMeals.size()) ? consumedMeals.get(i) : "";
-      String notConsumedName = (i < notConsumedNames.size()) ? notConsumedNames.get(i) : "";
-      String notConsumedMeal = (i < notConsumedMeals.size()) ? notConsumedMeals.get(i) : "";
-
-      System.out.format("| %-20s | %-20s | %-20s | %-20s |\n",
-          consumedName,
-          consumedMeal,
-          notConsumedName,
-          notConsumedMeal);
-    }
-    System.out.println("---------------------------------------------------------------------------------------------");
-  }
-
-/*  public void consumeMeal(Set<Guest> guests) {
-    for (Guest guest : guests) {
-      guestConsumesPreferredMeal(guest, buffetManager);
-    }
-  }*/
-
   public void consumeMeal(Set<Guest> guests) {
     List<String> consumedNames = new ArrayList<>();
     List<String> consumedMeals = new ArrayList<>();
@@ -178,45 +106,76 @@ public class BreakfastManager {
       guestConsumesPreferredMeal(guest, buffetManager, consumedNames, consumedMeals, notConsumedNames, notConsumedMeals);
     }
 
-    printMealsInTableFormat(consumedNames, consumedMeals, notConsumedNames, notConsumedMeals);
+    displayBreakfast.printMealsInTableFormat(consumedNames, consumedMeals, notConsumedNames, notConsumedMeals);
   }
 
-  private void serveBreakfast(Set<Guest> guestsToday) {
+  private void serveBreakfast(Set<Guest> guestsToday, int cycle) {
+    // refill
     refillToMax();
     displayBreakfast.showBreakfastMenu(buffetManager);
+
+    // consume
     consumeMeal(guestsToday);
 
     // discard
-    // TODO: Implement discard logic here
-  }
+    discardOldMeals(cycle);
 
- /* private static void testingConsumeMeal(BuffetManager buffetManager) {
-    buffetService.consumeFreshest(buffetManager, MealType.SCRAMBLED_EGGS);
-    System.out.println("\nBuffet after consumption:");
-    display.showBreakfastMenu(buffetManager);
-  }
-
-  private static void testingRefillBuffet(BuffetManager buffetManager) {
-    Map<MealType, Integer> refillSpec = BuffetRefillSpecification.getSampleRefillSpecification();
-    buffetService.refillBuffet(buffetManager, refillSpec);
-  }
-
-  private static void simulateOldMeals(BuffetManager buffetManager) {
-    List<BuffetMealPortion> allMeals = buffetManager.getAllMeals();
-
-    for (int i = 0; i < allMeals.size() / 2; i++) { // make half of the meals a day older
-      allMeals.get(i).setTimestamp(allMeals.get(i).getTimestamp().minusDays(1));
+    if (cycle == 9) {
+      discardEndOfDayMeals();
     }
   }
 
-  private static void simulateWasteCollection(BuffetManager buffetManager) {
-    // Simulating scenario to remove all SHORT durability meals that were added before today's date
-    int wastedCost = buffetService.collectWaste(buffetManager, MealDurability.SHORT, LocalDate.now().atStartOfDay());
-    System.out.println("\nCost of wasted meals: $" + wastedCost);
+  private void discardOldMeals(int currentCycle) {
+    // calculate the discard time for short duration meals
+    LocalDateTime discardShortBeforeTime = currentSimulatedTime.minusMinutes(MealDurability.SHORT.getDurationInMinutes()).plusMinutes(1);
+    discardMealsOfDurability(MealDurability.SHORT, discardShortBeforeTime);
+
+    // discard MEDIUM meals after cycle 5 (2.5 hours after 6:00 AM)
+    if (currentCycle >= 5) {
+      LocalDateTime discardMediumBeforeTime = currentSimulatedTime.minusMinutes(MealDurability.MEDIUM.getDurationInMinutes());
+      discardMealsOfDurability(MealDurability.MEDIUM, discardMediumBeforeTime);
+    }
   }
 
-  private static void displayUpdatedBuffet(BuffetManager buffetManager) {
-    System.out.println("\nUpdated Breakfast Buffet:");
-    display.showBreakfastMenu(buffetManager);
+/*  private void discardEndOfDayMeals() {
+    DiscardedMealsResult shortDiscardResult = discardMealsOfDurability(MealDurability.SHORT, currentSimulatedTime.toLocalDate().atTime(23, 59));
+    //displayBreakfast.displayDiscardedMealsAndCost(shortDiscardResult);
+
+    DiscardedMealsResult mediumDiscardResult = discardMealsOfDurability(MealDurability.MEDIUM, currentSimulatedTime.toLocalDate().atTime(23, 59));
+    //displayBreakfast.displayDiscardedMealsAndCost(mediumDiscardResult);
   }*/
+
+/*  private DiscardedMealsResult discardMealsOfDurability(MealDurability durability, LocalDateTime beforeTime) {
+    DiscardedMealsResult discardedResult = buffetService.collectWaste(buffetManager, durability, beforeTime);
+
+    if (discardedResult.getDiscardedMeals().isEmpty()) {
+      displayBreakfast.printNoMealsToDiscardMessage(durability);
+    } else {
+      displayBreakfast.displayDiscardedMealsAndCost(durability, discardedResult);
+    }
+    return discardedResult;
+  }*/
+
+  private DiscardedMealsResult discardMealsOfDurability(MealDurability durability, LocalDateTime beforeTime) {
+    return buffetService.collectWaste(buffetManager, durability, beforeTime);
+  }
+
+  public void displayDiscardedMealsForDurabilities(LocalDateTime beforeTime) {
+    DiscardedMealsResult shortResult = discardMealsOfDurability(MealDurability.SHORT, beforeTime);
+    DiscardedMealsResult mediumResult = discardMealsOfDurability(MealDurability.MEDIUM, beforeTime);
+
+    List<DiscardedMealsResult> results = Arrays.asList(shortResult, mediumResult);
+
+    if (shortResult.getDiscardedMeals().isEmpty() && mediumResult.getDiscardedMeals().isEmpty()) {
+      displayBreakfast.printNoMealsToDiscardMessage(null);  // Modify this to handle a null or create another method for when both are empty.
+    } else {
+      displayBreakfast.displayDiscardedMealsSideBySide(results);
+    }
+  }
+
+  private void discardEndOfDayMeals() {
+    displayDiscardedMealsForDurabilities(currentSimulatedTime.toLocalDate().atTime(23, 59));
+  }
+
+
 }
