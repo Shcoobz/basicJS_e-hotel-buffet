@@ -8,12 +8,12 @@ public class BuffetMealPortion {
   private MealType type;
   private LocalDateTime timestamp;
 
-  public BuffetMealPortion(MealType type) {
+  public BuffetMealPortion(MealType type, LocalDateTime timestamp) {
     this.type = type;
-    this.timestamp = LocalDateTime.now();
+    this.timestamp = timestamp;
   }
 
-  /*public Object getType() {
+  /*public MealType getType() {
     return type;
   }*/
 
@@ -25,9 +25,5 @@ public class BuffetMealPortion {
     return timestamp;
   }
 
-  // for testing old meals
-  public void setTimestamp(LocalDateTime timestamp) {
-    this.timestamp = timestamp;
-  }
 
 }

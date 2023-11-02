@@ -1,17 +1,15 @@
 
-Â
-java:S1192‘"Define a constant instead of duplicating this literal "---------------------------------------------------------------------------------------------" 4 times.(ôÙÊÔşÿÿÿÿ8°İúÒ·1
 A
-java:S1640:"Convert this Map to an EnumMap.(Î¸„ÿÿÿÿÿ8µÒÑµ·1
-]	java:S125V"<This block of commented-out lines of code should be removed.(¥ÇÎ›úÿÿÿÿ8ñÍ¼Ò·1
-]	java:S125e"<This block of commented-out lines of code should be removed.(¥ÇÎ›úÿÿÿÿ8­æŞÒ·1
-o
-java:S3457’"Q%n should be used in place of \n to produce the platform-specific line separator.(Ÿ¢íù8¥¨òÒ·1
-t
-java:S3457”"Q%n should be used in place of \n to produce the platform-specific line separator.(¾¡—ııÿÿÿÿ8°àìÒ·1
-t
-java:S3457"Q%n should be used in place of \n to produce the platform-specific line separator.(ë¥ïßúÿÿÿÿ8´àìÒ·1
-^	java:S125©"<This block of commented-out lines of code should be removed.(èÔÀ¯øÿÿÿÿ8óØÛÒ·1
+java:S1640:"Convert this Map to an EnumMap.(Î¸„ÿÿÿÿÿ8ÃÂïˆ¹1
 P
-java:S1135Â"2Complete the task associated to this TODO comment.(†š×Ü8ä«ÍÒ·1
-Y	java:S125Å"<This block of commented-out lines of code should be removed.(øÃŠá8æ«ÍÒ·1
+java:S1481p".Remove this unused "satisfied" local variable.(œ–Ññıÿÿÿÿ8‘Åïˆ¹1
+]	java:S125q"<This block of commented-out lines of code should be removed.(İÇ×Óüÿÿÿÿ8’Åïˆ¹1
+J	java:S108t")Either remove or fill this block of code.(†ı¯÷ùÿÿÿÿ8•Åïˆ¹1
+^	java:S125™"<This block of commented-out lines of code should be removed.(Ï€ùÿÿÿÿ8 Åïˆ¹1
+^	java:S125¡"<This block of commented-out lines of code should be removed.(äæ†ûÿÿÿÿ8¡Åïˆ¹1
+;
+java:S1128"Remove this duplicated import.(êÏŞï8ªÅïˆ¹1
+@
+java:S1128"Remove this duplicated import.(æÃ§ƒüÿÿÿÿ8ªÅïˆ¹1
+a
+java:S1144V"?Remove this unused private "guestConsumesPreferredMeal" method.(äÂ½œıÿÿÿÿ8¬Åïˆ¹1
