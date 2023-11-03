@@ -20,7 +20,6 @@ import java.util.Map;
 
 public class BuffetServiceImpl implements BuffetService {
 
-
   @Override
   public void refillBuffet(BuffetManager buffetManager, Map<MealType, Integer> portionsToAdd, LocalDateTime currentSimulatedTime) {
     for (Map.Entry<MealType, Integer> entry : portionsToAdd.entrySet()) {
@@ -44,31 +43,38 @@ public class BuffetServiceImpl implements BuffetService {
     int totalCost = 0;
 
     for (MealType type : MealType.values()) {
-
-      // check if durability matches provided durability
-      if (type.getDurability() == durability) {
-
-        // get all meals of type
+      if (shouldDiscardMealType(type, durability)) {
         List<BuffetMealPortion> portions = buffetManager.getAllMealsOfType(type);
-
-        // loop in reverse order to avoid shifting issues when removing
-        for (int i = portions.size() - 1; i >= 0; i--) {
-          BuffetMealPortion portion = portions.get(i);
-
-          // if portion's timestamp plus durability duration is before the current time, discard it
-          LocalDateTime discardTime = portion.getTimestamp().plusMinutes(type.getDurability().getDurationInMinutes());
-          if (discardTime.isBefore(currentTime)) {
-            totalCost += type.getCost();
-            discardedMeals.add(portion);
-            portions.remove(i);
-          }
-        }
+        totalCost += discardExpiredMeals(portions, type, currentTime, discardedMeals);
       }
     }
 
     return new DiscardedMealsResult(discardedMeals, totalCost);
   }
 
+  private boolean shouldDiscardMealType(MealType type, MealDurability durability) {
+    return type.getDurability() == durability;
+  }
+
+  private int discardExpiredMeals(List<BuffetMealPortion> portions, MealType type, LocalDateTime currentTime, List<BuffetMealPortion> discardedMeals) {
+    int costAccumulator = 0;
+
+    for (int i = portions.size() - 1; i >= 0; i--) {
+      BuffetMealPortion portion = portions.get(i);
+      if (isPortionExpired(portion, type, currentTime)) {
+        costAccumulator += type.getCost();
+        discardedMeals.add(portion);
+        portions.remove(i);
+      }
+    }
+
+    return costAccumulator;
+  }
+
+  private boolean isPortionExpired(BuffetMealPortion portion, MealType type, LocalDateTime currentTime) {
+    LocalDateTime discardTime = portion.getTimestamp().plusMinutes(type.getDurability().getDurationInMinutes());
+    return discardTime.isBefore(currentTime);
+  }
 
 }
 

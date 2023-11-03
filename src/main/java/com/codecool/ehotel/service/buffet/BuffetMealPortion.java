@@ -4,6 +4,14 @@ import com.codecool.ehotel.model.MealType;
 
 import java.time.LocalDateTime;
 
+/* model of single meal portion
+ *
+ * holds information about the meal's type and the time it was prepared or added to the buffet
+ *
+ * 'type' property categorizes the meal
+ * 'timestamp' property helps in identifying the freshness of meal
+ */
+
 public class BuffetMealPortion {
   private MealType type;
   private LocalDateTime timestamp;
@@ -13,10 +21,6 @@ public class BuffetMealPortion {
     this.timestamp = timestamp;
   }
 
-  /*public MealType getType() {
-    return type;
-  }*/
-
   public MealType getType() {
     return type;
   }
@@ -24,6 +28,5 @@ public class BuffetMealPortion {
   public LocalDateTime getTimestamp() {
     return timestamp;
   }
-
 
 }
