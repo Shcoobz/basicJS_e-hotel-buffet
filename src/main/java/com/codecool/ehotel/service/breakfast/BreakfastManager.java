@@ -36,20 +36,17 @@ public class BreakfastManager {
     this.totalWasteCost = 0;
   }
 
-  public void serve() {
+  // guest generation
+  private List<Guest> generateGuestsForSeason() {
+    GuestService guestService = new GuestServiceImpl();
+    LocalDate seasonStart = LocalDate.now().withDayOfYear(1); // start of year
+    LocalDate seasonEnd = LocalDate.now().withDayOfYear(365); // end of year
 
-    displayBreakfast.initialGreeting();
-
-    currentSimulatedTime = LocalDateTime.of(LocalDate.now(),OPENING_TIME);
-
-    for (int cycle = 1; cycle <= TOTAL_CYCLES; cycle++) {
-      displayBreakfast.printCycleStart(cycle, currentSimulatedTime);
-      Set<Guest> guestsToday = getGuestsForToday();
-      serveBreakfast(guestsToday, cycle);
-      currentSimulatedTime = currentSimulatedTime.plusMinutes(MINUTES_PER_CYCLE);
+    List<Guest> allGuests = new ArrayList<>();
+    for (int i = 0; i < NUMBER_OF_GUESTS; i++) {
+      allGuests.add(guestService.generateRandomGuest(seasonStart, seasonEnd));
     }
-
-    displayBreakfast.displaySessionMetrics(totalUnhappyGuests, totalWasteCost);
+    return allGuests;
   }
 
   private Set<Guest> getGuestsForToday() {
@@ -60,6 +57,7 @@ public class BreakfastManager {
     return guestService.getGuestsForDay(allGuests, today);
   }
 
+  // refill
   public void refillToMax() {
     Map<MealType, Integer> refillMap = new HashMap<>();
 
@@ -77,18 +75,7 @@ public class BreakfastManager {
     buffetService.refillBuffet(buffetManager, refillMap, currentSimulatedTime);
   }
 
-  private List<Guest> generateGuestsForSeason() {
-    GuestService guestService = new GuestServiceImpl();
-    LocalDate seasonStart = LocalDate.now().withDayOfYear(1); // start of year
-    LocalDate seasonEnd = LocalDate.now().withDayOfYear(365); // end of year
-
-    List<Guest> allGuests = new ArrayList<>();
-    for (int i = 0; i < NUMBER_OF_GUESTS; i++) {
-      allGuests.add(guestService.generateRandomGuest(seasonStart, seasonEnd));
-    }
-    return allGuests;
-  }
-
+  // consume
   private void guestConsumesPreferredMeal(Guest guest, BuffetManager buffet, List<String> consumedNames, List<String> consumedMeals, List<String> notConsumedNames, List<String> notConsumedMeals) {
     GuestType guestType = guest.guestType();
     List<MealType> preferredMeals = guestType.getMealPreferences();
@@ -120,20 +107,16 @@ public class BreakfastManager {
     displayBreakfast.showConsumedMeals(consumedNames, consumedMeals, notConsumedNames, notConsumedMeals);
   }
 
-  private void serveBreakfast(Set<Guest> guestsToday, int cycle) {
-    // refill
-    refillToMax();
-    displayBreakfast.showBreakfastMenu(buffetManager);
+  // discard
+  private DiscardedMealsResult discardMealsOfDurability(MealDurability durability, LocalDateTime beforeTime) {
+    DiscardedMealsResult discardedResult = buffetService.collectWaste(buffetManager, durability, beforeTime);
 
-    // consume
-    consumeMeal(guestsToday);
-
-    // discard
-    discardOldMeals(cycle);
-
-    if (cycle == TOTAL_CYCLES) {
-      discardEndOfDayMeals();
+    // if there are discarded meals, update the total waste cost
+    if (!discardedResult.getDiscardedMeals().isEmpty()) {
+      totalWasteCost += discardedResult.getTotalCost();
     }
+
+    return discardedResult;
   }
 
   private void discardOldMeals(int currentCycle) {
@@ -161,15 +144,37 @@ public class BreakfastManager {
     displayBreakfast.displayDiscardedMealsAndCostSideBySide(MealDurability.SHORT, shortDiscardResult, MealDurability.MEDIUM, mediumDiscardResult);
   }
 
-  private DiscardedMealsResult discardMealsOfDurability(MealDurability durability, LocalDateTime beforeTime) {
-    DiscardedMealsResult discardedResult = buffetService.collectWaste(buffetManager, durability, beforeTime);
+  // serving
+  private void serveBreakfast(Set<Guest> guestsToday, int cycle) {
+    // refill
+    refillToMax();
+    displayBreakfast.showBreakfastMenu(buffetManager);
 
-    // if there are discarded meals, update the total waste cost
-    if (!discardedResult.getDiscardedMeals().isEmpty()) {
-      totalWasteCost += discardedResult.getTotalCost();
+    // consume
+    consumeMeal(guestsToday);
+
+    // discard
+    discardOldMeals(cycle);
+
+    if (cycle == TOTAL_CYCLES) {
+      discardEndOfDayMeals();
     }
+  }
 
-    return discardedResult;
+  private void runServingCycles() {
+    for (int cycle = 1; cycle <= TOTAL_CYCLES; cycle++) {
+      displayBreakfast.printCycleStart(cycle, currentSimulatedTime);
+      Set<Guest> guestsToday = getGuestsForToday();
+      serveBreakfast(guestsToday, cycle);
+      currentSimulatedTime = currentSimulatedTime.plusMinutes(MINUTES_PER_CYCLE);
+    }
+  }
+
+  public void serve() {
+    displayBreakfast.initialGreeting();
+    currentSimulatedTime = LocalDateTime.of(LocalDate.now(), OPENING_TIME);
+    runServingCycles();
+    displayBreakfast.displaySessionMetrics(totalUnhappyGuests, totalWasteCost);
   }
 
 }
