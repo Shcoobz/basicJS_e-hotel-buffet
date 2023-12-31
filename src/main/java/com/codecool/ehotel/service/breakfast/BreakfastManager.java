@@ -171,6 +171,7 @@ public class BreakfastManager {
   }
 
   public void serve() {
+    displayBreakfast.printLogo();
     displayBreakfast.initialGreeting();
     currentSimulatedTime = LocalDateTime.of(LocalDate.now(), OPENING_TIME);
     runServingCycles();

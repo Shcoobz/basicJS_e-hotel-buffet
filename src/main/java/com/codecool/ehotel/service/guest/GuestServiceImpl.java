@@ -7,8 +7,20 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+/**
+ * Implementation of the GuestService interface.
+ * Provides services related to guest management, including generating random guests and retrieving guests for a specific day.
+ */
 public class GuestServiceImpl implements GuestService {
 
+  /**
+   * Generates a random guest with a randomized name, guest type, and stay duration within a specified season.
+   * The method selects a random name from a predefined list, a random guest type, and random check-in and check-out dates.
+   *
+   * @param seasonStart The start date of the season.
+   * @param seasonEnd The end date of the season.
+   * @return A randomly generated Guest instance.
+   */
   @Override
   public Guest generateRandomGuest(LocalDate seasonStart, LocalDate seasonEnd) {
 
@@ -38,6 +50,14 @@ public class GuestServiceImpl implements GuestService {
     return new Guest(name, guestType, checkIn, checkOut);
   }
 
+  /**
+   * Retrieves a set of guests who are staying at the hotel on a specified date.
+   * This method filters the provided list of guests to include only those whose stay includes the given date.
+   *
+   * @param guests The list of all guests to filter from.
+   * @param date The date for which to retrieve the guests.
+   * @return A set of Guests who are staying at the hotel on the specified date.
+   */
   @Override
   public Set<Guest> getGuestsForDay(List<Guest> guests, LocalDate date) {
     Set<Guest> guestsForToday = new HashSet<>();
