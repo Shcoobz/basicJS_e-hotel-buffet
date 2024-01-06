@@ -46,7 +46,7 @@ public class DisplayBreakfast {
    */
   public void initialGreeting() {
     System.out.println("\n*** Initial setup ***");
-    System.out.println("\nGood Morning, beloved guests! \nEnjoy your breakfast menu:");
+    System.out.println("\nGood Morning, beloved guests! \nEnjoy your breakfast menu :)");
   }
 
   /**
